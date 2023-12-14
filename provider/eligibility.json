@@ -1,0 +1,740 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ProviderPortal.Api.MemberEligibility",
+    "description": "This stack will allow various member-search requests to be transmitted to the business/domain services.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/provider-portal/v1/eligibility/member-search": {
+      "get": {
+        "tags": [
+          "MemberEligibility"
+        ],
+        "parameters": [
+          {
+            "name": "memberDOB",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchText",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateOfService",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "x-tax-id-number",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "description": "tax identification number",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-traceability-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "TraceabilityID which is generated as UUID",
+              "format": "uuid",
+              "example": "123e4567 -e89b-12d3-a456-426655440000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberSearchResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberSearchResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberSearchResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "DqUserBffAuthorizer": []
+          },
+          {
+            "JWT": []
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "type": "aws_proxy",
+          "httpMethod": "POST",
+          "uri": {
+            "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${MemberSearchFunction.Arn}/invocations"
+          },
+          "passthroughBehavior": "when_no_match",
+          "contentHandling": "CONVERT_TO_TEXT"
+        }
+      }
+    },
+    "/api/provider-portal/v1/eligibility/member-eligibility": {
+      "get": {
+        "tags": [
+          "MemberEligibility"
+        ],
+        "parameters": [
+          {
+            "name": "memberProfileGuid",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "serviceLocationGuid",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "practitionerGuid",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "accessPointGuid",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateOfService",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "routeId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tax-id-number",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "description": "tax identification number",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-traceability-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "TraceabilityID which is generated as UUID",
+              "format": "uuid",
+              "example": "123e4567 -e89b-12d3-a456-426655440000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberEligibilityResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberEligibilityResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberEligibilityResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "DqUserBffAuthorizer": []
+          },
+          {
+            "JWT": []
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "type": "aws_proxy",
+          "httpMethod": "POST",
+          "uri": {
+            "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${MemberEligibilityFunction.Arn}/invocations"
+          },
+          "passthroughBehavior": "when_no_match",
+          "contentHandling": "CONVERT_TO_TEXT"
+        }
+      }
+    },
+    "/api/provider-portal/v1/eligibility/member-saved-search/{id}": {
+      "get": {
+        "description": "Returns a saved search and its list of search attributes",
+        "tags": [
+          "MemberEligibility"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "user identifier i.e. member profile guid",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "x-tax-id-number",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "description": "tax identification number",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-traceability-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "TraceabilityID which is generated as UUID",
+              "format": "uuid",
+              "example": "123e4567 -e89b-12d3-a456-426655440000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedSearchResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedSearchResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedSearchResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "DqUserBffAuthorizer": []
+          },
+          {
+            "JWT": []
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "type": "aws_proxy",
+          "httpMethod": "POST",
+          "uri": {
+            "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${MemberSavedSearchFunction.Arn}/invocations"
+          },
+          "passthroughBehavior": "when_no_match",
+          "contentHandling": "CONVERT_TO_TEXT"
+        }
+      },
+      "post": {
+        "description": "Saves a search and its list of search attributes",
+        "tags": [
+          "MemberEligibility"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "user identifier i.e. member profile guid",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "x-tax-id-number",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "description": "tax identification number",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-traceability-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "TraceabilityID which is generated as UUID",
+              "format": "uuid",
+              "example": "123e4567 -e89b-12d3-a456-426655440000"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SavedSearchEntry"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SavedSearchEntry"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SavedSearchEntry"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "DqUserBffAuthorizer": []
+          },
+          {
+            "JWT": []
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "type": "aws_proxy",
+          "httpMethod": "POST",
+          "uri": {
+            "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${MemberSavedSearchFunction.Arn}/invocations"
+          },
+          "passthroughBehavior": "when_no_match",
+          "contentHandling": "CONVERT_TO_TEXT"
+        }
+      },
+      "delete": {
+        "description": "delete saved search",
+        "tags": [
+          "MemberEligibility"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "user identifier i.e. member profile guid",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "searchTitle",
+            "in": "query",
+            "required": true,
+            "description": "search title",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tax-id-number",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "description": "tax identification number",
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-traceability-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "TraceabilityID which is generated as UUID",
+              "format": "uuid",
+              "example": "123e4567 -e89b-12d3-a456-426655440000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "DqUserBffAuthorizer": []
+          },
+          {
+            "JWT": []
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "type": "aws_proxy",
+          "httpMethod": "POST",
+          "uri": {
+            "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${MemberSavedSearchFunction.Arn}/invocations"
+          },
+          "passthroughBehavior": "when_no_match",
+          "contentHandling": "CONVERT_TO_TEXT"
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "MemberEligibilityResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "businessGuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "serviceLocationGuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "practitionerGuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "memberProfileGuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "dateOfService": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberName": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberDateOfBirth": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberIdMasked": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberPlanName": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberCoverageLevel": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberEligibilityStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberEligibilityStatusLastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "locationAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "practitionerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "networkName": {
+            "type": "string",
+            "nullable": true
+          },
+          "routeId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MemberSearchResult": {
+        "type": "object",
+        "properties": {
+          "searchResultMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "member profile guid"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberIdLastFour": {
+            "type": "string",
+            "nullable": true
+          },
+          "routeId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchAttribute": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": false
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": false
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "nullable": false,
+            "format": "date"
+          },
+          "dateOfService": {
+            "type": "string",
+            "nullable": false,
+            "format": "date"
+          },
+          "memberId": {
+            "type": "string",
+            "nullable": false,
+            "format": "uuid"
+          },
+          "location": {
+            "type": "string",
+            "nullable": false
+          },
+          "provider": {
+            "type": "string",
+            "nullable": false
+          },
+          "memberProfileGuid": {
+            "type": "string",
+            "nullable": false,
+            "format": "uuid"
+          },
+          "locationId": {
+            "type": "string",
+            "nullable": false,
+            "format": "uuid"
+          },
+          "practitionerId": {
+            "type": "string",
+            "nullable": false,
+            "format": "uuid"
+          }
+        }
+      },
+      "SavedSearchEntry": {
+        "type": "object",
+        "properties": {
+          "tin": {
+            "type": "string",
+            "nullable": false
+          },
+          "searchTitle": {
+            "type": "string",
+            "nullable": false
+          },
+          "searchAttributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchAttribute"
+            }
+          }
+        }
+      },
+      "SavedSearchResult": {
+        "type": "object",
+        "properties": {
+          "searchEntries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SavedSearchEntry"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "DqUserBffAuthorizer": {
+        "type": "apiKey",
+        "name": "Unused",
+        "in": "header",
+        "x-amazon-apigateway-authtype": "custom",
+        "x-amazon-apigateway-authorizer": {
+          "type": "request",
+          "identitySource": "method.request.header.Authorization, method.request.header.X-Traceability-Id, method.request.header.X-Tax-Id-Number",
+          "authorizerUri": {
+            "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AuthorizerFunction.Arn}/invocations"
+          }
+        }
+      },
+      "JWT": {
+        "scheme": "bearer",
+        "type": "http",
+        "description": "JWT-based auth"
+      }
+    }
+  }
+}
